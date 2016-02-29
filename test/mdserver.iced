@@ -4,24 +4,25 @@
 
 fs = require 'fs'
 path = require 'path'
-{server,transport,client} = require '../src/main'
+{transport, client} = require '../src/main'
 
 PORT = 8125
 
-main = () ->
+main = (cb) ->
   tls_opts = {
     ca: fs.readFileSync(path.join(__dirname, '../../kbfs/kbfsdocker/docker_cert.pem')),
   }
   trans = new transport.Transport { port: PORT, host: "localhost", tls_opts}
   await trans.connect defer err
   if err?
-    console.log "Failed to connect in Transport..."
-    console.log err
+    console.log "Failed to connect in Transport:", err
+    trans.close()
   else
     c = new client.Client trans, "P.1"
-    await cli.invoke "question", {}, defer error, result
+    await c.invoke "question", {}, defer err, result
     console.log("result:", result)
-    console.log("error:", error)
-    trans.close()
+    console.log("error:", err)
+  trans.close()
+  cb err
 
-main()
+await main defer()

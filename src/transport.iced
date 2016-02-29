@@ -270,11 +270,12 @@ exports.Transport = class Transport extends Dispatch
 
     # Also, if the connection times out, let's abandon ship
     # and try again.  By default, this is for 10s
-    setTimeout rv.id(TMO).defer(), @_connect_timeout
-    
+    connect_timeout_handle = setTimeout rv.id(TMO).defer(), @_connect_timeout
+
     ok = false
     await rv.wait defer rv_id
-    
+    clearTimeout(connect_timeout_handle)
+
     switch rv_id
       when CON then ok = true
       when ERR then @_warn err
