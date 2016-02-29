@@ -4,7 +4,7 @@
 
 fs = require 'fs'
 path = require 'path'
-{transport, client} = require '../src/main'
+{transport, client, debug} = require '../src/main'
 
 PORT = 8125
 
@@ -20,6 +20,8 @@ main = (cb) ->
     checkServerIdentity: ignoreServerIdentity
   }
   trans = new transport.Transport { port: PORT, host: "localhost", tls_opts}
+  trans.set_debugger new debug.Debugger debug.constants.flags.LEVEL_4
+
   await trans.connect defer err
   if err?
     console.log "Failed to connect in Transport:", err
