@@ -6,8 +6,6 @@ fs = require 'fs'
 path = require 'path'
 {transport, client, debug, errors} = require '../src/main'
 
-PORT = 8125
-
 ignoreServerIdentity = (servername, cert) ->
   console.log "Allowing any servername for testing. Servername: #{servername}"
 
@@ -32,10 +30,10 @@ KBFS_PUBLIC_MERKLE_TREE_ID = 1
 
 main = (cb) ->
   tls_opts = {
-    ca: fs.readFileSync(path.join(__dirname, '../../kbfs/kbfsdocker/docker_cert.pem'))
-    checkServerIdentity: ignoreServerIdentity
+    ca: fs.readFileSync(path.join(__dirname, 'root_cert.pem'))
+    # checkServerIdentity: ignoreServerIdentity
   }
-  trans = new MyTransport { port: PORT, host: "localhost", tls_opts}
+  trans = new MyTransport { port: 443, host: "mdserver.kbfs.keybase.io", tls_opts}
   trans.set_debugger new debug.Debugger debug.constants.flags.LEVEL_4
 
   await trans.connect defer err
