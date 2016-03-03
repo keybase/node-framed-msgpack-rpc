@@ -5,6 +5,7 @@
 fs = require 'fs'
 path = require 'path'
 {transport, client, debug, errors} = require '../src/main'
+purepack = require 'purepack'
 
 ignoreServerIdentity = (servername, cert) ->
   console.log "Allowing any servername for testing. Servername: #{servername}"
@@ -34,7 +35,7 @@ main = (cb) ->
     # checkServerIdentity: ignoreServerIdentity
   }
   trans = new MyTransport { port: 443, host: "mdserver.kbfs.keybase.io", tls_opts}
-  trans.set_debugger new debug.Debugger debug.constants.flags.LEVEL_4
+  # trans.set_debugger new debug.Debugger debug.constants.flags.LEVEL_4
 
   await trans.connect defer err
   if err?
@@ -46,6 +47,9 @@ main = (cb) ->
       treeID: KBFS_PUBLIC_MERKLE_TREE_ID
     await c.invoke "metadata.getMerkleRootLatest", [arg], defer err, result
     console.log("result:", result)
+    console.log("version:", result.version)
+    console.log("unpacked blob:", purepack.unpack(result.root))
+    console.log("base64 root:", result.root.toString("base64"))
     console.log("error:", err)
   trans.close()
   cb err
