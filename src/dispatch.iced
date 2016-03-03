@@ -189,7 +189,7 @@ exports.Dispatch = class Dispatch extends Packetizer
   get_hook_wrapper : () -> null
 
   wrap_outgoing_error   : (s) -> s.toString()
-  unwrap_incoming_error : (s) -> new Error(s) if typeof(s) is 'string'
+  unwrap_incoming_error : (s) -> if typeof(s) is 'string' then new Error(s) else s
 
   # please override me!
   get_handler_pair : (m) ->
