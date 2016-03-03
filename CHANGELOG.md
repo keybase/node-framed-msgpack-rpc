@@ -1,3 +1,8 @@
+## v1.1.10 (2016-03-03)
+
+Features:
+  * Add initial support for TLS.
+
 ## v1.1.9 (2015-08-22)
 
 Features:
