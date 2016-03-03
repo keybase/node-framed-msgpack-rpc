@@ -26,8 +26,9 @@ class MyTransport extends transport.Transport
     else
       new Error o
 
-# MerkleTreeID.KBFS_PUBLIC_1 from common.avdl.
+# from common.avdl.
 KBFS_PUBLIC_MERKLE_TREE_ID = 1
+KBFS_PRIVATE_MERKLE_TREE_ID = 2
 
 main = (cb) ->
   tls_opts = {
@@ -42,15 +43,19 @@ main = (cb) ->
     console.log "Failed to connect in Transport:", err
     trans.close()
   else
-    c = new client.Client trans, "keybase.1"
-    arg =
-      treeID: KBFS_PUBLIC_MERKLE_TREE_ID
-    await c.invoke "metadata.getMerkleRootLatest", [arg], defer err, result
-    console.log("result:", result)
-    console.log("version:", result.version)
-    console.log("unpacked blob:", purepack.unpack(result.root))
-    console.log("base64 root:", result.root.toString("base64"))
-    console.log("error:", err)
+    do_one = (tree_name, tree_id, cb) ->
+        c = new client.Client trans, "keybase.1"
+        arg =
+          treeID: tree_id
+        await c.invoke "metadata.getMerkleRootLatest", [arg], defer err, result
+        console.log("#{tree_name} result:", result)
+        console.log("#{tree_name} version:", result.version)
+        console.log("#{tree_name} unpacked blob:", purepack.unpack(result.root))
+        console.log("#{tree_name} base64 root:", result.root.toString("base64"))
+        console.log("#{tree_name} error:", err)
+        cb()
+    await do_one "public", KBFS_PUBLIC_MERKLE_TREE_ID, defer()
+    await do_one "private", KBFS_PRIVATE_MERKLE_TREE_ID, defer()
   trans.close()
   cb err
 
