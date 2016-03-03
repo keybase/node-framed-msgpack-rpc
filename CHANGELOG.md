@@ -1,3 +1,8 @@
+## v1.1.11 (2016-03-03)
+
+Bugfixes:
+  * Fix a dropped error in Dispatch.
+
 ## v1.1.10 (2016-03-03)
 
 Features:
