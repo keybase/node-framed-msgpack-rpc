@@ -35,7 +35,7 @@ main = (cb) ->
     ca: fs.readFileSync(path.join(__dirname, 'root_cert.pem'))
     # checkServerIdentity: ignoreServerIdentity
   }
-  trans = new MyTransport { port: 443, host: "mdserver.kbfs.keybase.io", tls_opts}
+  trans = new MyTransport { port: 443, host: "mdserver.dev.keybase.io", tls_opts}
   # trans.set_debugger new debug.Debugger debug.constants.flags.LEVEL_4
 
   await trans.connect defer err
