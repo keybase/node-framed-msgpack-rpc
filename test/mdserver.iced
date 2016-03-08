@@ -32,10 +32,10 @@ KBFS_PRIVATE_MERKLE_TREE_ID = 2
 
 main = (cb) ->
   tls_opts = {
-    ca: fs.readFileSync(path.join(__dirname, 'root_cert.pem'))
-    # checkServerIdentity: ignoreServerIdentity
+    ca: fs.readFileSync(path.join(__dirname, 'docker_cert.pem'))
+    checkServerIdentity: ignoreServerIdentity
   }
-  trans = new MyTransport { port: 443, host: "mdserver.dev.keybase.io", tls_opts}
+  trans = new MyTransport { port: 8125, host: "localhost", tls_opts }
   # trans.set_debugger new debug.Debugger debug.constants.flags.LEVEL_4
 
   await trans.connect defer err
@@ -50,8 +50,7 @@ main = (cb) ->
         await c.invoke "metadata.getMerkleRootLatest", [arg], defer err, result
         console.log("#{tree_name} result:", result)
         console.log("#{tree_name} version:", result.version)
-        console.log("#{tree_name} unpacked blob:", purepack.unpack(result.root))
-        console.log("#{tree_name} base64 root:", result.root.toString("base64"))
+        console.log("#{tree_name} blob:", JSON.stringify(result.root))
         console.log("#{tree_name} error:", err)
         cb()
     await do_one "public", KBFS_PUBLIC_MERKLE_TREE_ID, defer()
