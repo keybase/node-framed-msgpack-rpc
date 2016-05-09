@@ -225,7 +225,7 @@ exports.Transport = class Transport extends Dispatch
     # issue closes on the connection
     @hooks?.connected w
 
-    if @hooks.blocking_connected?
+    if @hooks?.blocking_connected?
       await @hooks.blocking_connected w, defer()
 
     #
