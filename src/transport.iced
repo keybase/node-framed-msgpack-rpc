@@ -285,6 +285,8 @@ exports.Transport = class Transport extends Dispatch
       # Now remap the event emitters
       @_activate_stream x
       err = null
+      if @hooks?.after_connect?
+        await @hooks.after_connect defer err
     else if not err?
       err = new Error "error in connection"
 
