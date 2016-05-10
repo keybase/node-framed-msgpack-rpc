@@ -1,4 +1,4 @@
-# Framed Msgpack RPC
+# Framed Msgpack RPC [![Build Status](https://travis-ci.org/keybase/node-framed-msgpack-rpc.svg)](https://travis-ci.org/keybase/node-framed-msgpack-rpc)
 
 Framed Msgpack RPC (FMPRPC) is an RPC system for node.js.  It allows
 clients to call remote procedures on servers.  An RPC consists of: (1)
