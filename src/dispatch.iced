@@ -64,7 +64,7 @@ exports.Dispatch = class Dispatch extends Packetizer
         when @CANCEL
           [seqid,method,param] = msg
           response = new Response @, seqid
-          @_serve { method, param, cancelled: true }
+          @_serve { method, param, response, cancelled: true }
         else
           @_warn "Unknown message type: #{type}"
 
