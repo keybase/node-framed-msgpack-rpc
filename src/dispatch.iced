@@ -7,7 +7,7 @@ iced = require('./iced').runtime
 ##=======================================================================
 
 exports.Response = class Response
-  constructor : (@dispatch, @seqid) ->
+  constructor : (@dispatch, @seqid, @cancelled = false) ->
     @debug_msg = null
 
   result : (res) ->
@@ -51,9 +51,9 @@ exports.Dispatch = class Dispatch extends Packetizer
       @_warn "Bad input packet in dispatch"
     else
       switch (type = msg.shift())
-        when @INVOKE
+        when @INVOKE, @CANCEL
           [seqid,method,param] = msg
-          response = new Response @, seqid
+          response = new Response @, seqid, type is @CANCEL
           @_serve { method, param, response }
         when @NOTIFY
           [method,param] = msg
@@ -61,10 +61,6 @@ exports.Dispatch = class Dispatch extends Packetizer
         when @RESPONSE
           [seqid,error,result] = msg
           @_dispatch_handle_response { seqid, error, result }
-        when @CANCEL
-          [seqid,method,param] = msg
-          response = new Response @, seqid
-          @_serve { method, param, response, cancelled: true }
         else
           @_warn "Unknown message type: #{type}"
 
@@ -158,7 +154,7 @@ exports.Dispatch = class Dispatch extends Packetizer
 
   ##-----------------------------------------
 
-  _serve : ({method, param, response, cancelled}) ->
+  _serve : ({method, param, response}) ->
 
     pair = @get_handler_pair method
 
@@ -178,7 +174,7 @@ exports.Dispatch = class Dispatch extends Packetizer
       debug_msg.call()
 
     if @_generic_handler?
-      @_generic_handler { method, param, response, dispatch : @, cancelled: !!cancelled }
+      @_generic_handler { method, param, response, dispatch : @ }
     else if pair? and (hw = @get_hook_wrapper())?
       hw { method : pair[1], thisobj : pair[0], param, response, dispatch : @ }
     else if pair then pair[1].call pair[0], param, response, @
