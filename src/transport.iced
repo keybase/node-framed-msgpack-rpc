@@ -51,26 +51,26 @@ exports.Transport = class Transport extends Dispatch
 
   ##-----------------------------------------
   # Public API
-  # 
+  #
 
   constructor : ({ @port, @host, @net_opts, net_stream, @log_obj,
                    @parent, @do_tcp_delay, @hooks, dbgr, @path,
                    @tls_opts, connect_timeout}) ->
     super
-    
+
     @host = "localhost" if not @host or @host is "-"
     @net_opts = {} unless @net_opts
     @net_opts.host = @host
     @net_opts.port = @port
     @net_opts.path = @path
     @_explicit_close = false
-    
+
     @_remote_str = [ @host, @port].join ":"
-    @set_logger @log_obj 
-    
+    @set_logger @log_obj
+
     @_lock = new Lock()
     @_generation = 1
-    
+
     @_dbgr = dbgr
 
     # Give up on a connection after 10s timeout
@@ -466,4 +466,3 @@ exports.createTransport = (opts) ->
   else                new Transport opts
 
 ##=======================================================================
-

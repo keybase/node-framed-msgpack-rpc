@@ -11,10 +11,16 @@ exports.Response = class Response
     @debug_msg = null
 
   result : (res) ->
+    if @cancelled
+      @dispatch._warn "Called result on cancelled response: " + @seqid
+      return
     @debug_msg.response(null, res).call() if @debug_msg
     @dispatch.respond @seqid, null, res
 
   error : (err) ->
+    if @cancelled
+      @dispatch._warn "Called error on cancelled response: " + @seqid
+      return
     @debug_msg.response(err, null).call() if @debug_msg
     @dispatch.respond @seqid, err, null
 

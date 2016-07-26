@@ -1,8 +1,7 @@
-
 iced = require('./iced').runtime
 
 ##========================================================================
- 
+
 exports.Client = class Client
 
   #-----------------------------------------
@@ -22,5 +21,5 @@ exports.Client = class Client
     method = @make_method method
     program = @_program
     @transport.invoke { @program, method, args, notify : true }
-      
+
 ##========================================================================
