@@ -1,3 +1,9 @@
+## v1.1.13 (2016-08-17)
+
+Bufixes:
+ * Fix crasher in the error path of _packetizer_error
+ * merges from electron fixes
+
 ## v1.1.11 (2016-03-03)
 
 Bugfixes:
