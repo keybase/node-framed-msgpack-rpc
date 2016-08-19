@@ -1,4 +1,3 @@
-
 ie = require 'iced-error'
 
 module.exports = E = ie.make_errors
@@ -7,5 +6,3 @@ module.exports = E = ie.make_errors
 
 # Specify a toString() method to be compatible with the old version of our error
 E.UnknownMethodError.prototype.toString = () -> "unknown method: #{@method}"
-
-

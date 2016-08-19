@@ -6,15 +6,21 @@ iced = require('./iced').runtime
 
 ##=======================================================================
 
-exports.Reponse = class Reponse
-  constructor : (@dispatch, @seqid) ->
+exports.Response = class Response
+  constructor : (@dispatch, @seqid, @cancelled = false) ->
     @debug_msg = null
 
   result : (res) ->
+    if @cancelled
+      @dispatch._warn "Called result on cancelled response: " + @seqid
+      return
     @debug_msg.response(null, res).call() if @debug_msg
     @dispatch.respond @seqid, null, res
 
   error : (err) ->
+    if @cancelled
+      @dispatch._warn "Called error on cancelled response: " + @seqid
+      return
     @debug_msg.response(err, null).call() if @debug_msg
     @dispatch.respond @seqid, err, null
 
@@ -25,6 +31,7 @@ exports.Dispatch = class Dispatch extends Packetizer
   INVOKE : 0
   RESPONSE : 1
   NOTIFY   : 2
+  CANCEL   : 3 # Note: Canceling from this library is unsupported currently
 
   ##-----------------------------------------
 
@@ -50,9 +57,9 @@ exports.Dispatch = class Dispatch extends Packetizer
       @_warn "Bad input packet in dispatch"
     else
       switch (type = msg.shift())
-        when @INVOKE
+        when @INVOKE, @CANCEL
           [seqid,method,param] = msg
-          response = new Reponse @, seqid
+          response = new Response @, seqid, type is @CANCEL
           @_serve { method, param, response }
         when @NOTIFY
           [method,param] = msg
