@@ -31,7 +31,7 @@ exports.Dispatch = class Dispatch extends Packetizer
   INVOKE : 0
   RESPONSE : 1
   NOTIFY   : 2
-  CANCEL   : 3
+  CANCEL   : 3 # Note: Canceling from this library is unsupported currently
 
   ##-----------------------------------------
 
