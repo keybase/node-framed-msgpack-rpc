@@ -1,5 +1,7 @@
 net = require 'net'
 tls = require 'tls'
+path = require 'path'
+process = require 'process'
 {Lock} = require './lock'
 {Dispatch} = require './dispatch'
 log = require './log'
@@ -51,26 +53,26 @@ exports.Transport = class Transport extends Dispatch
 
   ##-----------------------------------------
   # Public API
-  # 
+  #
 
   constructor : ({ @port, @host, @net_opts, net_stream, @log_obj,
                    @parent, @do_tcp_delay, @hooks, dbgr, @path,
                    @tls_opts, connect_timeout}) ->
     super
-    
+
     @host = "localhost" if not @host or @host is "-"
     @net_opts = {} unless @net_opts
     @net_opts.host = @host
     @net_opts.port = @port
     @net_opts.path = @path
     @_explicit_close = false
-    
+
     @_remote_str = [ @host, @port].join ":"
-    @set_logger @log_obj 
-    
+    @set_logger @log_obj
+
     @_lock = new Lock()
     @_generation = 1
-    
+
     @_dbgr = dbgr
 
     # Give up on a connection after 10s timeout
@@ -255,6 +257,13 @@ exports.Transport = class Transport extends Dispatch
       # happens before the TLS handshake and so masks errors.
       connect_event_name = 'secureConnect'
     else
+      # on many Unix-style OS's, there is a path limit on sockets that blocks
+      # us from successfully connecting. Try to workaround the problem
+      # by changing working directory first
+      if @net_opts.path? and @net_opts.path.length >= 103
+        oldCwd = process.cwd()
+        process.chdir(path.dirname(@net_opts.path))
+        @net_opts.path = path.basename(@net_opts.path)
       x = net.connect @net_opts
       connect_event_name = 'connect'
     x.setNoDelay true unless @do_tcp_delay
@@ -275,6 +284,7 @@ exports.Transport = class Transport extends Dispatch
     ok = false
     await rv.wait defer rv_id
 
+    process.chdir(oldCwd) if oldCwd? # undo any cwd change from abov
     switch rv_id
       when CON then ok = true
       when ERR then @_warn err
