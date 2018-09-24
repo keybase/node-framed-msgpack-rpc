@@ -261,7 +261,7 @@ exports.Transport = class Transport extends Dispatch
       # us from successfully connecting. Try to workaround the problem
       # by changing working directory first
       if @net_opts.path? and @net_opts.path.length >= 103
-        oldCwd = process.getcwd()
+        oldCwd = process.cwd()
         process.chdir(path.dirname(@net_opts.path))
         @net_opts.path = path.basename(@net_opts.path)
       x = net.connect @net_opts
@@ -284,7 +284,7 @@ exports.Transport = class Transport extends Dispatch
     ok = false
     await rv.wait defer rv_id
 
-    process.chdir(oldCwd) if oldCwd?
+    process.chdir(oldCwd) if oldCwd? # undo any cwd change from abov
     switch rv_id
       when CON then ok = true
       when ERR then @_warn err
