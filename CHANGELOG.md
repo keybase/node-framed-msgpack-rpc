@@ -1,3 +1,8 @@
+## v1.1.14 (2018-09-24)
+
+Bugfixes:
+ * allow connection to Unix domain sockets with really long names
+
 ## v1.1.13 (2016-08-17)
 
 Bufixes:
