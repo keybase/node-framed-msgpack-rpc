@@ -1,3 +1,8 @@
+## v1.1.15 (2018-09-25)
+
+Bugfixes:
+ * fix for android path problem
+
 ## v1.1.14 (2018-09-24)
 
 Bugfixes:
