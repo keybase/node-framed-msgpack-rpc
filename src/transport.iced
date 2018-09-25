@@ -1,7 +1,5 @@
 net = require 'net'
 tls = require 'tls'
-path = require 'path'
-process = require 'process'
 {Lock} = require './lock'
 {Dispatch} = require './dispatch'
 log = require './log'
@@ -261,6 +259,8 @@ exports.Transport = class Transport extends Dispatch
       # us from successfully connecting. Try to workaround the problem
       # by changing working directory first
       if @net_opts.path? and @net_opts.path.length >= 103
+        path = require 'pa' + 'th'
+        process = require 'pro' + 'cess'
         oldCwd = process.cwd()
         process.chdir(path.dirname(@net_opts.path))
         @net_opts.path = path.basename(@net_opts.path)
