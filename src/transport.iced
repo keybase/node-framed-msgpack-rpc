@@ -1,6 +1,6 @@
 net = require 'net'
 tls = require 'tls'
-path = require 'path'
+pp = require 'path-parse'
 process = require 'process'
 {Lock} = require './lock'
 {Dispatch} = require './dispatch'
@@ -262,8 +262,9 @@ exports.Transport = class Transport extends Dispatch
       # by changing working directory first
       if @net_opts.path? and @net_opts.path.length >= 103
         oldCwd = process.cwd()
-        process.chdir(path.dirname(@net_opts.path))
-        @net_opts.path = path.basename(@net_opts.path)
+        path_info = pp(@net_opts.path)
+        process.chdir(path_info.dir)
+        @net_opts.path = path_info.base
       x = net.connect @net_opts
       connect_event_name = 'connect'
     x.setNoDelay true unless @do_tcp_delay
