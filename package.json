@@ -18,7 +18,8 @@
     "iced-error": "0.0.9",
     "iced-lock": "^1.0.2",
     "iced-runtime": "^1.0.1",
-    "purepack": ">=1"
+    "purepack": ">=1",
+    "path-parse": "^1.0.6"
   },
   "devDependencies": {
     "colors": "~0.6.2",
