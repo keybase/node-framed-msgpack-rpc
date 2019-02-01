@@ -1,3 +1,7 @@
+## v1.1.16 (2019-02-01
+
+ * use Buffer.from not (new Buffer)
+
 ## v1.1.15 (2018-09-25)
 
 Bugfixes:

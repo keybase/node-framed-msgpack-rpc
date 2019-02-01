@@ -45,7 +45,7 @@ exports.Ring = class Ring
         break
 
     # now make a buffer that's potentially bigger than what we wanted
-    ret = new Buffer n_grabbed
+    ret = Buffer.alloc n_grabbed
     n = 0
 
     # now copy all of those num_bufs into ret

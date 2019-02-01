@@ -17,7 +17,7 @@ class P_v1 extends server.Handler
     res.result arg
     # Now, generate some random junk in the buffer, and then send it down
     # the pipe!
-    @transport._raw_write new Buffer [3...10]
+    @transport._raw_write Buffer.from [3...10]
   h_good : (arg, res) ->
     res.result arg
 
@@ -72,7 +72,7 @@ exports.reconnect_after_client_error = (T, cb) ->
   for i in [0...n]
     await T.test_rpc cli, "good", arg, arg, defer()
     # Poop on ourselves...
-    clix._raw_write new Buffer [3...10]
+    clix._raw_write Buffer.from [3...10]
     
     await setTimeout defer(), 10
 
