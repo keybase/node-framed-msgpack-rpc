@@ -1,3 +1,7 @@
+## v1.1.18 (2019-03-28)
+
+ * fix long socket path workaround
+
 ## v1.1.17 (2019-03-28)
 
  * fix package.json
