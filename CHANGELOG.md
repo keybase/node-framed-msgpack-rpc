@@ -1,4 +1,8 @@
-## v1.1.16 (2019-02-01
+## v1.1.17 (2019-03-28)
+
+ * fix package.json
+
+## v1.1.16 (2019-02-01)
 
  * use Buffer.from not (new Buffer)
 
