@@ -257,6 +257,7 @@ exports.Transport = class Transport extends Dispatch
       # happens before the TLS handshake and so masks errors.
       connect_event_name = 'secureConnect'
     else
+      opts = @net_opts
       # on many Unix-style OS's, there is a path limit on sockets that blocks
       # us from successfully connecting. Try to workaround the problem
       # by changing working directory first
@@ -268,8 +269,9 @@ exports.Transport = class Transport extends Dispatch
         catch ex
           @_warn "could not cd close to socket path: #{ex.code} #{ex.message}"
           return cb new Error "error in connection (cd to long socket path)"
-        @net_opts.path = path_info.base
-      x = net.connect @net_opts
+        opts = Object.assign({}, @net_opts)
+        opts.path = path_info.base
+      x = net.connect opts
       connect_event_name = 'connect'
     x.setNoDelay true unless @do_tcp_delay
 
