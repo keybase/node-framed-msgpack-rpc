@@ -257,15 +257,21 @@ exports.Transport = class Transport extends Dispatch
       # happens before the TLS handshake and so masks errors.
       connect_event_name = 'secureConnect'
     else
+      opts = @net_opts
       # on many Unix-style OS's, there is a path limit on sockets that blocks
       # us from successfully connecting. Try to workaround the problem
       # by changing working directory first
       if @net_opts.path? and @net_opts.path.length >= 103
         oldCwd = process.cwd()
         path_info = pp(@net_opts.path)
-        process.chdir(path_info.dir)
-        @net_opts.path = path_info.base
-      x = net.connect @net_opts
+        try
+          process.chdir(path_info.dir)
+        catch ex
+          @_warn "could not cd close to socket path: #{ex.code} #{ex.message}"
+          return cb new Error "error in connection (cd to long socket path)"
+        opts = Object.assign({}, @net_opts)
+        opts.path = path_info.base
+      x = net.connect opts
       connect_event_name = 'connect'
     x.setNoDelay true unless @do_tcp_delay
 
@@ -285,7 +291,13 @@ exports.Transport = class Transport extends Dispatch
     ok = false
     await rv.wait defer rv_id
 
-    process.chdir(oldCwd) if oldCwd? # undo any cwd change from abov
+    if oldCwd? # undo any cwd change from abov
+      try
+        process.chdir(oldCwd) 
+      catch ex
+        @_warn "could not recover cwd: #{ex.code} #{ex.message}"
+        return cb new Error "error in connection (changed cwd)"
+
     switch rv_id
       when CON then ok = true
       when ERR then @_warn err
