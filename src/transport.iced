@@ -263,7 +263,11 @@ exports.Transport = class Transport extends Dispatch
       if @net_opts.path? and @net_opts.path.length >= 103
         oldCwd = process.cwd()
         path_info = pp(@net_opts.path)
-        process.chdir(path_info.dir)
+        try
+          process.chdir(path_info.dir)
+        catch ex
+          @_warn "could not cd close to socket path: #{ex.code} #{ex.message}"
+          return cb new Error "error in connection (cd to long socket path)"
         @net_opts.path = path_info.base
       x = net.connect @net_opts
       connect_event_name = 'connect'
@@ -285,7 +289,13 @@ exports.Transport = class Transport extends Dispatch
     ok = false
     await rv.wait defer rv_id
 
-    process.chdir(oldCwd) if oldCwd? # undo any cwd change from abov
+    if oldCwd? # undo any cwd change from abov
+      try
+        process.chdir(oldCwd) 
+      catch ex
+        @_warn "could not recover cwd: #{ex.code} #{ex.message}"
+        return cb new Error "error in connection (changed cwd)"
+
     switch rv_id
       when CON then ok = true
       when ERR then @_warn err

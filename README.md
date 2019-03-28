@@ -625,6 +625,13 @@ to print only the fields of your choosing (via the `flags` parameter).
 
 See [debug.iced](https://github.com/maxtaco/node-framed-msgpack-rpc/blob/master/src/debug.iced) for more details.
 
+## Building
+
+```
+npm i
+./node_modules/.bin/icake build
+```
+
 ## Internals
 
 ### Packetizer
