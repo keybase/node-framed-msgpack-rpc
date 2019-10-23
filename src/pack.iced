@@ -4,7 +4,7 @@ catch e
 
 if not mp?
   try
-    pp = require 'purepack'
+    pp = require '@msgpack/msgpack'
     mp = pp
   catch e
 
@@ -22,15 +22,15 @@ exports.set_opts = set_opts = (o) -> _opts = o
 exports.use_byte_arrays = () ->
   if not pp?
     try
-      mp = pp = require 'purepack'
+      mp = pp = require '@msgpack/msgpack'
     catch err
       throw new Error "Cannot use_byte_arrays without purepack!"
 
-exports.pack = (b) -> mp.pack b
+exports.pack = (b) -> mp.encode b
 
 exports.unpack = (b) ->
   err = dat = null
-  try dat = mp.unpack b
+  try dat = mp.decode b
   catch err
   [err, dat]
 
