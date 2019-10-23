@@ -27,7 +27,7 @@ exports.use_byte_arrays = () ->
       throw new Error "Cannot use_byte_arrays without purepack!"
 
 exports.pack = (b) ->
-    encoded = mp.encode
+    encoded = mp.encode(b)
     Buffer.from encoded.buffer, encoded.byteOffset, encoded.byteLength
 
 
