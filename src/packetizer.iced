@@ -93,7 +93,7 @@ exports.Packetizer = class Packetizer
     # header. If we can't get that much, we'll just have to wait!
     return @WAIT unless (f_full = @_ring.grab frame_len)?
 
-    [w,r] = unpack f_full, frame_len
+    [w,r] = unpack f_full.slice 0, frame_len
     @_packetize_warning w if w?
 
     res = switch (typ = typeof r)
@@ -122,7 +122,7 @@ exports.Packetizer = class Packetizer
 
     ret = if l > @_ring.len() or not (b = @_ring.grab l)?
       @WAIT
-    else if not ([pw,msg] = unpack b, l)? or not msg?
+    else if not ([pw,msg] = unpack b.slice 0, l)? or not msg?
       @_packetize_error "bad encoding found in data/payload; len=#{l}"
       @ERR
     else if not is_array msg
