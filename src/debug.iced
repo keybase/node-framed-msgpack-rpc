@@ -16,13 +16,14 @@ F =
   ARG : 0x20
   RES : 0x40
   TYPE : 0x80
+  COMPRESSION_TYPE: 0x90
   DIR : 0x100
   PORT : 0x200
   VERBOSE : 0x400
   ALL : 0xfffffff
 
 F.LEVEL_0 = F.NONE
-F.LEVEL_1 = F.METHOD | F.TYPE | F.DIR | F.TYPE
+F.LEVEL_1 = F.METHOD | F.TYPE | F.DIR | F.TYPE | F.COMPRESSION_TYPE
 F.LEVEL_2 = F.LEVEL_1 | F.SEQID | F.TIMESTAMP | F.REMOTE | F.PORT
 F.LEVEL_3 = F.LEVEL_2 | F.ERR
 F.LEVEL_4 = F.LEVEL_3 | F.RES | F.ARG
@@ -39,6 +40,7 @@ SF =
   r : F.RES
   e : F.ERR
   c : F.TYPE
+  C : F.COMPRESSION_TYPE
   d : F.DIRECTION
   v : F.VERBOSE
   P : F.PORT
@@ -62,8 +64,9 @@ flip_dir = (d) -> if d is dir.INCOMING then dir.OUTGOING else dir.INCOMING
 type =
   SERVER : 1
   CLIENT_NOTIFY : 2
-  CLIENT_CALL : 3
-  
+  CLIENT_INVOKE : 3
+  CLIENT_INVOKE_COMPRESSED : 4
+
 ##=======================================================================
 
 F2S = {}
@@ -74,6 +77,7 @@ F2S[F.TYPE] = {};
 F2S[F.TYPE][type.SERVER] = "server";
 F2S[F.TYPE][type.CLIENT_NOTIFY] = "cli.notify";
 F2S[F.TYPE][type.CLIENT_INVOKE] = "cli.invoke";
+F2S[F.TYPE][type.CLIENT_INVOKE_COMPRESSED] = "cli.invokeCompresed";
 
 ##=======================================================================
 
@@ -102,7 +106,7 @@ exports.sflags_to_flags = sflags_to_flags = (s) ->
 ##=======================================================================
 
 exports.Debugger = class Debugger
-  
+
   constructor : (flags, @log_obj, @log_obj_mthd) ->
     # Potentially convert from strings to integer flags
     @flags = if typeof flags is 'string' then sflags_to_flags flags else flags
@@ -121,11 +125,11 @@ exports.Debugger = class Debugger
 
   call : (msg) ->
     new_json_msg = {}
-    
+
     # Usually don't copy the arg or res if it's in the other direction,
     # but this can overpower that
     V = @flags & F.VERBOSE
-    
+
     if (@flags & F.TIMESTAMP)
       new_json_msg.timestamp = (new Date()).getTime() / 1000.0
 
@@ -142,7 +146,7 @@ exports.Debugger = class Debugger
       if do_copy
         val = f2s[val] if (f2s = F2S[flag])?
         new_json_msg[key] = val
-        
+
     @_output new_json_msg
 
 ##=======================================================================
@@ -173,7 +177,7 @@ exports.Message = class Message
   show_arg : (V) ->
     (V or (@is_server() and @is_incoming()) or
           (@is_client() and @is_outgoing()))
-          
+
   show_res : (V) ->
     (V or (@is_server() and @is_outgoing()) or
           (@is_client() and @is_incoming()))

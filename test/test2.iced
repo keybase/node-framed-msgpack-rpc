@@ -1,4 +1,5 @@
 {Server,Transport,Client} = require '../src/main'
+{COMPRESSION_TYPE_GZIP} = require '../src/dispatch'
 
 ## Do the same test as test1, a second time, must to make
 ## sure that we can rebind a second time...
@@ -7,14 +8,14 @@ PORT = 8881
 s = null
 
 exports.init = (cb) ->
-  
+
   s = new Server
     port : PORT
     programs :
       "P.1" :
         foo : (arg, res) -> res.result { y : arg.i + 2 }
         bar : (arg, res) -> res.result { y : arg.j * arg.k }
-        
+
   await s.listen defer err
   cb err
 
@@ -26,6 +27,8 @@ test_A = (T, cb) ->
   if x
     await T.test_rpc c, "foo", { i : 4 } , { y : 6 }, defer()
     await T.test_rpc c, "bar", { j : 2, k : 7 }, { y : 14}, defer()
+    await T.test_rpc_compressed c, "foo", COMPRESSION_TYPE_GZIP, { i : 4 } , { y : 6 }, defer()
+    await T.test_rpc_compressed c, "bar", COMPRESSION_TYPE_GZIP, { j : 2, k : 7 }, { y : 14}, defer()
     x.close()
     x = c = null
   cb()

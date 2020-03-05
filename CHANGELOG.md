@@ -1,3 +1,7 @@
+## v1.1.19 (2020-03-05)
+
+ * implement `INVOKE_COMPRESSED` for parity with golang library's `CallCompressed`.
+
 ## v1.1.18 (2019-03-28)
 
  * fix long socket path workaround

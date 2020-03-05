@@ -1,4 +1,5 @@
 {server,Transport,Client} = require '../src/main'
+{COMPRESSION_TYPE_GZIP} = require '../src/dispatch'
 
 ## Do the same test as test1, a second time, must to make
 ## sure that we can rebind a second time...
@@ -11,28 +12,30 @@ class P_v1 extends server.Handler
   h_bar : (arg, res) -> res.result { y : arg.j * arg.k }
 
 exports.init = (cb) ->
-  
-  s = new server.ContextualServer 
+
+  s = new server.ContextualServer
     port : PORT
     classes :
       "P.1" : P_v1
-        
+
   await s.listen defer err
   cb err
 
 exports.test1 = (T, cb) -> test_A T, cb
 exports.test2 = (T, cb) -> test_A T, cb
 
-test_A = (T, cb) -> 
+test_A = (T, cb) ->
   await T.connect PORT, "P.1", defer x, c
-  if x 
+  if x
     await T.test_rpc c, "foo", { i : 4 } , { y : 6 }, defer()
     await T.test_rpc c, "bar", { j : 2, k : 7 }, { y : 14}, defer()
-    
+    await T.test_rpc_compressed c, "foo", COMPRESSION_TYPE_GZIP, { i : 4 } , { y : 6 }, defer()
+    await T.test_rpc_compressed c, "bar", COMPRESSION_TYPE_GZIP, { j : 2, k : 7 }, { y : 14}, defer()
+
     bad = "XXyyXX"
     await c.invoke bad, {}, defer err, res
     T.search err, /unknown method/, "method '#{bad}' should not be found"
-    
+
     x.close()
     x = c = null
   cb()

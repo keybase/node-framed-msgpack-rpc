@@ -1,5 +1,6 @@
 
 {log,errors,server,transport,client} = require "../"
+{COMPRESSION_TYPE_GZIP} = require '../src/dispatch'
 
 PORT = 19983
 
@@ -40,6 +41,7 @@ exports.test_1 = (T,cb) ->
           res.result { y : arg.i - arg.j }
     }
     await T.test_rpc c, "foo", { i : 20 }, { y : 200 }, defer()
+    await T.test_rpc_compressed c, "foo", COMPRESSION_TYPE_GZIP, { i : 20 }, { y : 200 }, defer()
     x.close()
     x = c = null
 
@@ -109,6 +111,7 @@ exports.test_2 = (T,cb) ->
           res.result { y : arg.i - arg.j }
     }
     await T.test_rpc c, "foo", { i : 20 }, { y : 200 }, defer()
+    await T.test_rpc_compressed c, "foo", COMPRESSION_TYPE_GZIP, { i : 20 }, { y : 200 }, defer()
 
     # Now check that we've succesfully gotten an error, and the error
     # went through the wrapping/unwrapping system as we expect
