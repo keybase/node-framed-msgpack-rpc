@@ -1,4 +1,5 @@
 {server,Transport,Client,debug} = require '../src/main'
+{COMPRESSION_TYPE_GZIP} = require '../src/dispatch'
 
 # The same as test9, but over Unix Domain sockets, and not over
 # TCP Ports...
@@ -41,6 +42,9 @@ test_A = (T, cb) ->
 
     bad = "XXyyXX"
     await c.invoke bad, {}, defer err, res
+    T.search err.toString(), /unknown method/, "method '#{bad}' should not be found"
+
+    await c.invoke_compressed bad, COMPRESSION_TYPE_GZIP, {}, defer err, res
     T.search err.toString(), /unknown method/, "method '#{bad}' should not be found"
 
     x.close()

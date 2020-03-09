@@ -1,25 +1,26 @@
 {server,transport,client} = require '../src/main'
+{COMPRESSION_TYPE_GZIP} = require '../src/dispatch'
 
 PORT = 8881
 
 s = null
 
 exports.init = (cb) ->
-  
+
   s = new server.Server
     port : PORT
     programs :
       "P.1" :
         foo : (arg, res) -> res.result { y : arg.i + 2 }
         bar : (arg, res) -> res.result { y : arg.j * arg.k }
-        
+
   await s.listen defer err
   cb err
 
 exports.test1 = (T, cb) -> test_A T, cb
 exports.test2 = (T, cb) -> test_A T, cb
 
-test_A = (T, cb) -> 
+test_A = (T, cb) ->
   x = new transport.Transport { port : PORT, host : "-" }
   await x.connect defer err
   if err?
@@ -29,6 +30,8 @@ test_A = (T, cb) ->
     c = new client.Client x, "P.1"
     await T.test_rpc c, "foo", { i : 4 } , { y : 6 }, defer()
     await T.test_rpc c, "bar", { j : 2, k : 7 }, { y : 14}, defer()
+    await T.test_rpc_compressed c, "foo", COMPRESSION_TYPE_GZIP, { i : 4 } , { y : 6 }, defer()
+    await T.test_rpc_compressed c, "bar", COMPRESSION_TYPE_GZIP, { j : 2, k : 7 }, { y : 14}, defer()
     x.close()
     x = c = null
   cb ok

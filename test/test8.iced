@@ -1,4 +1,5 @@
 {server,Transport,Client} = require '../src/main'
+{COMPRESSION_TYPE_GZIP} = require '../src/dispatch'
 
 ## Do the same test as test1, a second time, must to make
 ## sure that we can rebind a second time...
@@ -14,11 +15,11 @@ rj = require 'random-json'
 ##=======================================================================
 
 class MyServer extends server.SimpleServer
-  
+
   constructor : (d) ->
     super d
     @_x = CONST
-    
+
   get_program_name : () -> PROT
   h_reflect : (arg, res) -> res.result arg
   h_get_x : (arg, res) ->
@@ -41,7 +42,7 @@ exports.init = (cb, gto) ->
     if x
       clix = x
       cli = c
-      
+
   cb err
 
 ##=======================================================================
@@ -51,11 +52,15 @@ exports.test1 = (T, cb) ->
   arg =
     x : "simple stuff here"
     v : [0..100]
-      
+
   n = 4
   for i in [0...n]
     await T.test_rpc cli, "reflect", arg, arg, defer()
     await T.test_rpc cli, "get_x", arg, { x : CONST+i } , defer()
+
+  for i in [0...n]
+    await T.test_rpc_compressed cli, "reflect", COMPRESSION_TYPE_GZIP, arg, arg, defer()
+    await T.test_rpc_compressed cli, "get_x", COMPRESSION_TYPE_GZIP, arg, { x : CONST+i+n } , defer()
 
   cb()
 

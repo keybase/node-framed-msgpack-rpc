@@ -26,5 +26,3 @@ exports.Timer = class Timer
     @_running = false
     @_total = 0
     @_ts = 0
-      
-    

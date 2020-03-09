@@ -91,6 +91,12 @@ class TestCase
     @check_rpc full, error, result, expected
     cb()
 
+  test_rpc_compressed : (cli, method, ctype, arg, expected, cb) ->
+    full = [ cli.program , method ].join "."
+    await cli.invoke_compressed method, ctype, arg, defer error, result
+    @check_rpc full, error, result, expected
+    cb()
+
   error : (e) ->
     console.log e.red
     @_ok = false
