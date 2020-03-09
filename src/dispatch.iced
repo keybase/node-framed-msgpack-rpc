@@ -1,22 +1,56 @@
 {Packetizer} = require './packetizer'
+{unpack,pack} = require './pack'
 dbg = require './debug'
 E = require './errors'
+zlib = require('zlib')
 
 iced = require('./iced').runtime
 
+COMPRESSION_TYPE_NONE = 0
+COMPRESSION_TYPE_GZIP = 1
+
+compress = (ctype, data) ->
+  unless ctype?
+    return data
+  switch ctype
+    when COMPRESSION_TYPE_NONE
+      return data
+    when COMPRESSION_TYPE_GZIP
+      data = pack data
+      data = zlib.gzipSync data
+      return data
+    else
+      throw new Error "Compress: unknown compression type #{ctype}"
+
+uncompress = (ctype, data) ->
+  unless ctype?
+    return data
+  switch ctype
+    when COMPRESSION_TYPE_NONE
+      return data
+    when COMPRESSION_TYPE_GZIP
+      data = zlib.gunzipSync data
+      [err, data] = unpack data
+      unless err?
+        return data
+      throw err
+    else
+      throw new Error "Uncompress: unknown compression type #{ctype}"
+
 ##=======================================================================
 
-exports.Reponse = class Reponse
-  constructor : (@dispatch, @seqid) ->
+exports.Response = class Response
+  constructor : (@dispatch, @seqid, @ctype) ->
     @debug_msg = null
 
   result : (res) ->
+    res = compress @ctype, res
     @debug_msg.response(null, res).call() if @debug_msg
-    @dispatch.respond @seqid, null, res
+    @dispatch.respond @seqid, @ctype, null, res
 
   error : (err) ->
     @debug_msg.response(err, null).call() if @debug_msg
-    @dispatch.respond @seqid, err, null
+    @dispatch.respond @seqid, @ctype, err, null
 
 ##=======================================================================
 
@@ -25,6 +59,8 @@ exports.Dispatch = class Dispatch extends Packetizer
   INVOKE : 0
   RESPONSE : 1
   NOTIFY   : 2
+  # CANCEL : 3, not implemented
+  INVOKE_COMPRESSED : 4
 
   ##-----------------------------------------
 
@@ -52,7 +88,7 @@ exports.Dispatch = class Dispatch extends Packetizer
       switch (type = msg.shift())
         when @INVOKE
           [seqid,method,param] = msg
-          response = new Reponse @, seqid
+          response = new Response @, seqid
           @_serve { method, param, response }
         when @NOTIFY
           [method,param] = msg
@@ -60,6 +96,11 @@ exports.Dispatch = class Dispatch extends Packetizer
         when @RESPONSE
           [seqid,error,result] = msg
           @_dispatch_handle_response { seqid, error, result }
+        when @INVOKE_COMPRESSED
+          [seqid,ctype,method,param] = msg
+          param = uncompress ctype, param
+          response = new Response @, seqid, ctype
+          @_serve { method, param, response }
         else
           @_warn "Unknown message type: #{type}"
 
@@ -95,13 +136,17 @@ exports.Dispatch = class Dispatch extends Packetizer
 
   ##-----------------------------------------
 
-  respond : (seqid, error, result) ->
-    msg = [ @RESPONSE, seqid, error, result ]
+  respond : (seqid, ctype, error, result) ->
+    if ctype?
+      result = compress ctype, result
+      msg = [ @RESPONSE, seqid, ctype, error, result ]
+    else
+      msg = [ @RESPONSE, seqid, error, result ]
     @send msg
 
   ##-----------------------------------------
 
-  invoke : ({program, method, args, notify}, cb, out) ->
+  invoke : ({program, ctype, method, args, notify}, cb, out) ->
 
     method = @make_method program, method
 
@@ -110,16 +155,24 @@ exports.Dispatch = class Dispatch extends Packetizer
     if notify
       type = @NOTIFY
       dtype = dbg.constants.type.CLIENT_NOTIFY
+    else if ctype?
+      type = @INVOKE_COMPRESSED
+      dtype = dbg.constants.type.CLIENT_INVOKE_COMPRESSED
     else
       type = @INVOKE
       dtype = dbg.constants.type.CLIENT_INVOKE
 
-    msg = [ type, seqid, method, args ]
+    if ctype?
+      args = compress ctype, args
+      msg = [ type, seqid, ctype, method, args ]
+    else
+      msg = [ type, seqid, method, args ]
 
     if @_dbgr
       debug_msg = @_dbgr.new_message {
         method,
         seqid,
+        ctype,
         arg : args,
         dir : dbg.constants.dir.OUTGOING,
         remote : @remote_address(),

@@ -1,6 +1,7 @@
 {RobustTransport,Client} = require '../src/main'
 {fork} = require 'child_process'
 path = require 'path'
+{COMPRESSION_TYPE_GZIP} = require '../src/dispatch'
 
 ## Do the same test as test1, a second time, must to make
 ## sure that we can rebind a second time...
@@ -30,9 +31,12 @@ exports.reconnect = (T, cb) ->
     tries = 4
     for i in [0...tries]
       restart = (i isnt tries-1)
-      await T.test_rpc c, "foo", { i : 4 } , { y : 6 }, defer()
+      if i % 2
+        await T.test_rpc c, "foo", { i : 4 } , { y : 6 }, defer()
+      else
+        await T.test_rpc_compressed c, "foo", COMPRESSION_TYPE_GZIP, { i : 4 } , { y : 6 }, defer()
       await setTimeout defer(), 10
 
     x.close()
-    
+
   cb()

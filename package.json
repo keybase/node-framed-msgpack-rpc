@@ -1,6 +1,6 @@
 {
   "name": "framed-msgpack-rpc",
-  "version": "1.1.18",
+  "version": "1.1.19",
   "description": "Framed Msgpack RPC for node.js",
   "homepage": "https://github.com/keybase/node-framed-msgpack-rpc",
   "main": "./lib/main",
@@ -18,8 +18,9 @@
     "iced-error": "0.0.9",
     "iced-lock": "^1.0.2",
     "iced-runtime": "^1.0.1",
+    "path-parse": "^1.0.6",
     "purepack": ">=1",
-    "path-parse": "^1.0.6"
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "colors": "~0.6.2",

@@ -293,7 +293,7 @@ exports.Transport = class Transport extends Dispatch
 
     if oldCwd? # undo any cwd change from abov
       try
-        process.chdir(oldCwd) 
+        process.chdir(oldCwd)
       catch ex
         @_warn "could not recover cwd: #{ex.code} #{ex.message}"
         return cb new Error "error in connection (changed cwd)"

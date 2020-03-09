@@ -4,7 +4,7 @@ path          = require 'path'
 
 LIB = "lib/"
 
-task 'build', 'build the whole jam', (cb) ->  
+task 'build', 'build the whole jam', (cb) ->
   console.log "Building"
   files = fs.readdirSync 'src'
   files = ('src/' + file for file in files when file.match(/\.iced$/))

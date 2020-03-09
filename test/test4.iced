@@ -1,4 +1,5 @@
 {server,Transport,Client} = require '../src/main'
+{COMPRESSION_TYPE_NONE, COMPRESSION_TYPE_GZIP} = require '../src/dispatch'
 
 ## Do the same test as test1, a second time, must to make
 ## sure that we can rebind a second time...
@@ -17,12 +18,12 @@ class P_v1 extends server.Handler
 ##=======================================================================
 
 exports.init = (cb) ->
-  
-  s = new server.ContextualServer 
+
+  s = new server.ContextualServer
     port : PORT
     classes :
       "P.1" : P_v1
-        
+
   await s.listen defer err
   cb err
 
@@ -34,10 +35,10 @@ exports.volley_of_strings = (T, cb) ->
     sz = 10000
     await crypto.randomBytes sz, defer ex, buf
     rcb { r : buf.toString 'base64' }
-  
+
   await run_test n, T, genfn, defer()
   cb()
-    
+
 ##=======================================================================
 
 exports.volley_of_objects = (T, cb) ->
@@ -53,22 +54,37 @@ exports.volley_of_objects = (T, cb) ->
 run_test = (n, T, obj_gen, cb) ->
 
   await T.connect PORT, "P.1", defer x, c
-  
+
   if x
-    
+
     args = []
     res = []
     err = []
-    
+
     for i in [0..n]
       await obj_gen defer args[i]
-      
+
+    # normal invoke
     await
       for a,i in args
         c.invoke "reflect", a, defer err[i], res[i]
-
     for a,i in args
       T.check_rpc "reflect #{i}", err[i], res[i], args[i]
+
+    # invoke compressed w/gzip
+    await
+      for a,i in args
+        c.invoke_compressed "reflect", COMPRESSION_TYPE_GZIP, a, defer err[i], res[i]
+    for a,i in args
+      T.check_rpc "reflect #{i}", err[i], res[i], args[i]
+
+    # invoke compressed w/no compression
+    await
+      for a,i in args
+        c.invoke_compressed "reflect", COMPRESSION_TYPE_NONE, a, defer err[i], res[i]
+    for a,i in args
+      T.check_rpc "reflect #{i}", err[i], res[i], args[i]
+
 
     x.close()
 
