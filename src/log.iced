@@ -39,20 +39,20 @@ exports.Logger = class Logger
   set_remote : (r) -> @remote = r
   set_prefix : (p) -> @prefix = p
 
-  debug : (m) -> @_log m, "D" if @level <= L.DEBUG
-  info : (m) ->  @_log m, "I" if @level <= L.INFO
-  warn : (m) ->  @_log m, "W" if @level <= L.WARN
-  error : (m) -> @_log m, "E" if @level <= L.ERROR
-  fatal : (m) -> @_log m, "F" if @level <= L.FATAL
+  debug : (m) -> @_log m, "D", null, L.DEBUG if @level <= L.DEBUG
+  info : (m) ->  @_log m, "I", null, L.INFO if @level <= L.INFO
+  warn : (m) ->  @_log m, "W", null, L.WARN if @level <= L.WARN
+  error : (m) -> @_log m, "E", null, L.ERROR if @level <= L.ERROR
+  fatal : (m) -> @_log m, "F", null, L.FATAL if @level <= L.FATAL
 
-  _log : (m, l, ohook) ->
+  _log : (m, l, ohook, level) ->
     parts = []
     parts.push @prefix if @prefix?
     parts.push "[#{l}]" if l
     parts.push @remote if @remote
     parts.push stringify m
     ohook = @output_hook unless ohook
-    ohook parts.join " "
+    ohook (parts.join " "), level
 
   make_child : (d) -> return new Logger d
 

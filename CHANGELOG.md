@@ -1,3 +1,7 @@
+## v1.1.21 (2020-03-11)
+
+ * Send log level to output hook in logger
+
 ## v1.1.20 (2020-03-10)
 
  * Fix encoding bug for responses of compresses calls.
