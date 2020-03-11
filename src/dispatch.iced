@@ -46,11 +46,11 @@ exports.Response = class Response
   result : (res) ->
     res = compress @ctype, res
     @debug_msg.response(null, res).call() if @debug_msg
-    @dispatch.respond @seqid, @ctype, null, res
+    @dispatch.respond @seqid, null, res
 
   error : (err) ->
     @debug_msg.response(err, null).call() if @debug_msg
-    @dispatch.respond @seqid, @ctype, err, null
+    @dispatch.respond @seqid, err, null
 
 ##=======================================================================
 
@@ -136,12 +136,8 @@ exports.Dispatch = class Dispatch extends Packetizer
 
   ##-----------------------------------------
 
-  respond : (seqid, ctype, error, result) ->
-    if ctype?
-      result = compress ctype, result
-      msg = [ @RESPONSE, seqid, ctype, error, result ]
-    else
-      msg = [ @RESPONSE, seqid, error, result ]
+  respond : (seqid, error, result) ->
+    msg = [ @RESPONSE, seqid, error, result ]
     @send msg
 
   ##-----------------------------------------
