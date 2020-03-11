@@ -1,3 +1,7 @@
+## v1.1.20 (2020-03-10)
+
+ * Fix encoding bug for responses of compresses calls.
+
 ## v1.1.19 (2020-03-05)
 
  * implement `INVOKE_COMPRESSED` for parity with golang library's `CallCompressed`.
