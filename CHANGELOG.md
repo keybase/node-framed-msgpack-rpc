@@ -1,3 +1,7 @@
+## v1.1.21 (2020-03-20)
+
+ * Allow optional @msgpack/msgpack encoding
+
 ## v1.1.20 (2020-03-10)
 
  * Fix encoding bug for responses of compresses calls.
