@@ -39,7 +39,7 @@ exports.use_byte_arrays = () ->
         when "@msgpack/msgpack"
           mpmp = require "@msgpack/msgpack"
     catch err
-      throw new Error "Cannot use_byte_arrays without 'purepack' or @msgpack/msgpack!"
+      throw new Error "Cannot use_byte_arrays without 'purepack' or '@msgpack/msgpack!'"
 
 exports.pack = (b) ->
   encode_lib = get_encode_lib()
