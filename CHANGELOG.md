@@ -1,5 +1,6 @@
-## v1.1.21 (2020-03-11)
+## v1.1.21 (2020-03-20)
 
+ * Allow optional @msgpack/msgpack encoding
  * Send log level to output hook in logger
 
 ## v1.1.20 (2020-03-10)

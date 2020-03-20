@@ -18,8 +18,9 @@
     "iced-error": "0.0.9",
     "iced-lock": "^1.0.2",
     "iced-runtime": "^1.0.1",
-    "path-parse": "^1.0.6",
+    "@msgpack/msgpack": "1.9.3",
     "purepack": ">=1",
+    "path-parse": "^1.0.6",
     "zlib": "^1.0.5"
   },
   "devDependencies": {
