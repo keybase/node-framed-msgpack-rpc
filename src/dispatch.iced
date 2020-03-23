@@ -2,7 +2,7 @@
 {unpack,pack} = require './pack'
 dbg = require './debug'
 E = require './errors'
-zlib = require('zlib')
+pako = require('pako')
 
 iced = require('./iced').runtime
 
@@ -17,7 +17,7 @@ compress = (ctype, data) ->
       return data
     when COMPRESSION_TYPE_GZIP
       data = pack data
-      data = zlib.gzipSync data
+      data = pako.deflate data
       return data
     else
       throw new Error "Compress: unknown compression type #{ctype}"
@@ -29,7 +29,7 @@ uncompress = (ctype, data) ->
     when COMPRESSION_TYPE_NONE
       return data
     when COMPRESSION_TYPE_GZIP
-      data = zlib.gunzipSync data
+      data = pako.inflate data
       [err, data] = unpack data
       unless err?
         return data
