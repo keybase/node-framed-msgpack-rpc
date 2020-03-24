@@ -3,6 +3,7 @@
 dbg = require './debug'
 E = require './errors'
 pako = require('pako')
+toBuffer = require('typedarray-to-buffer')
 
 iced = require('./iced').runtime
 
@@ -18,7 +19,7 @@ compress = (ctype, data) ->
     when COMPRESSION_TYPE_GZIP
       data = pack data
       data = pako.deflate data
-      return Buffer.from data
+      return toBuffer data
     else
       throw new Error "Compress: unknown compression type #{ctype}"
 
@@ -30,7 +31,7 @@ uncompress = (ctype, data) ->
       return data
     when COMPRESSION_TYPE_GZIP
       data = pako.inflate data
-      [err, data] = unpack Buffer.from data
+      [err, data] = unpack toBuffer data
       unless err?
         return data
       throw err
