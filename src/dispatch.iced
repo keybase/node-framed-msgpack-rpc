@@ -18,7 +18,7 @@ compress = (ctype, data) ->
     when COMPRESSION_TYPE_GZIP
       data = pack data
       data = pako.deflate data
-      return data
+      return Buffer.from data
     else
       throw new Error "Compress: unknown compression type #{ctype}"
 
@@ -30,7 +30,7 @@ uncompress = (ctype, data) ->
       return data
     when COMPRESSION_TYPE_GZIP
       data = pako.inflate data
-      [err, data] = unpack data
+      [err, data] = unpack Buffer.from data
       unless err?
         return data
       throw err
