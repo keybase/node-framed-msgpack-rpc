@@ -7,8 +7,8 @@ toBuffer = require('typedarray-to-buffer')
 
 iced = require('./iced').runtime
 
-COMPRESSION_TYPE_NONE = 0
-COMPRESSION_TYPE_GZIP = 1
+exports.COMPRESSION_TYPE_NONE = COMPRESSION_TYPE_NONE = 0
+exports.COMPRESSION_TYPE_GZIP = COMPRESSION_TYPE_GZIP = 1
 
 compress = (ctype, data) ->
   unless ctype?
@@ -188,6 +188,9 @@ exports.Dispatch = class Dispatch extends Packetizer
         out.cancel = () => @cancel seqid
 
       await (@_invocations[seqid] = defer(error,result) )
+
+      if ctype? and not error
+        result = uncompress ctype, result
 
       debug_msg.response(error, result).call() if debug_msg
 
