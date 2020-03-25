@@ -2,12 +2,13 @@
 {unpack,pack} = require './pack'
 dbg = require './debug'
 E = require './errors'
-zlib = require('zlib')
+pako = require('pako')
+toBuffer = require('typedarray-to-buffer')
 
 iced = require('./iced').runtime
 
-COMPRESSION_TYPE_NONE = 0
-COMPRESSION_TYPE_GZIP = 1
+exports.COMPRESSION_TYPE_NONE = COMPRESSION_TYPE_NONE = 0
+exports.COMPRESSION_TYPE_GZIP = COMPRESSION_TYPE_GZIP = 1
 
 compress = (ctype, data) ->
   unless ctype?
@@ -17,8 +18,8 @@ compress = (ctype, data) ->
       return data
     when COMPRESSION_TYPE_GZIP
       data = pack data
-      data = zlib.gzipSync data
-      return data
+      data = pako.deflate data
+      return toBuffer data
     else
       throw new Error "Compress: unknown compression type #{ctype}"
 
@@ -29,8 +30,8 @@ uncompress = (ctype, data) ->
     when COMPRESSION_TYPE_NONE
       return data
     when COMPRESSION_TYPE_GZIP
-      data = zlib.gunzipSync data
-      [err, data] = unpack data
+      data = pako.inflate data
+      [err, data] = unpack toBuffer data
       unless err?
         return data
       throw err
@@ -187,6 +188,9 @@ exports.Dispatch = class Dispatch extends Packetizer
         out.cancel = () => @cancel seqid
 
       await (@_invocations[seqid] = defer(error,result) )
+
+      if ctype? and not error
+        result = uncompress ctype, result
 
       debug_msg.response(error, result).call() if debug_msg
 

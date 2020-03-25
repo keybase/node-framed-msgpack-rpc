@@ -18,10 +18,13 @@
     "iced-error": "0.0.9",
     "iced-lock": "^1.0.2",
     "iced-runtime": "^1.0.1",
-    "@msgpack/msgpack": "1.9.3",
-    "purepack": ">=1",
+    "pako": "^1.0.11",
     "path-parse": "^1.0.6",
-    "zlib": "^1.0.5"
+    "typedarray-to-buffer": "^3.1.5"
+  },
+  "optionalDependencies": {
+    "@msgpack/msgpack": "1.9.3",
+    "purepack": ">=1"
   },
   "devDependencies": {
     "colors": "~0.6.2",

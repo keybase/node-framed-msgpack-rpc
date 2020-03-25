@@ -1,7 +1,8 @@
-## v1.1.21 (2020-03-20)
+## v1.1.21 (2020-03-23)
 
  * Allow optional @msgpack/msgpack encoding
  * Send log level to output hook in logger
+ * Switch compression library from zlib to pako
 
 ## v1.1.20 (2020-03-10)
 
