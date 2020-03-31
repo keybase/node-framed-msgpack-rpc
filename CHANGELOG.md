@@ -1,3 +1,7 @@
+## v1.1.23 (2020-03-31)
+
+ * fix `compress` not prepending a gzip header to the payload
+
 ## v1.1.22 (2020-03-25)
 
  * Send log level to output hook in logger
