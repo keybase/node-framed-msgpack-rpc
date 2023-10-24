@@ -1,6 +1,6 @@
 {
   "name": "framed-msgpack-rpc",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "description": "Framed Msgpack RPC for node.js",
   "homepage": "https://github.com/keybase/node-framed-msgpack-rpc",
   "main": "./lib/main",
@@ -15,23 +15,23 @@
     "test": "node_modules/.bin/iced test/all.iced"
   },
   "dependencies": {
-    "iced-error": "0.0.9",
-    "iced-lock": "^1.0.2",
-    "iced-runtime": "^1.0.1",
-    "pako": "^1.0.11",
-    "path-parse": "^1.0.6",
-    "typedarray-to-buffer": "^3.1.5"
+    "iced-error": "0.0.13",
+    "iced-lock": "2.0.1",
+    "iced-runtime": "1.0.4",
+    "pako": "2.1.0",
+    "path-parse": "1.0.7",
+    "typedarray-to-buffer": "4.0.0"
   },
   "optionalDependencies": {
-    "@msgpack/msgpack": "1.9.3",
+    "@msgpack/msgpack": "2.8.0",
     "purepack": ">=1"
   },
   "devDependencies": {
-    "colors": "~0.6.2",
-    "random-json": "*",
-    "iced-coffee-script": "*",
-    "deep-equal": "*",
-    "optimist": "*"
+    "colors": "1.4.0",
+    "random-json": "3.0.2",
+    "iced-coffee-script": "108.0.14",
+    "deep-equal": "2.2.2",
+    "optimist": "0.6.1"
   },
   "licenses": [
     {

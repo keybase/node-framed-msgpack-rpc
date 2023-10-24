@@ -25,7 +25,6 @@ exports.init = (cb) ->
   cb null
 
 exports.reconnect = (T, cb) ->
-
   await T.connect PORT, "P.1", defer(x,c), {}
   if x
     tries = 4
