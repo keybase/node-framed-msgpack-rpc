@@ -12,6 +12,7 @@
     "lib": "lib"
   },
   "scripts": {
+    "build": "iced -c -o lib/ src/",
     "test": "node node_modules/.bin/iced test/all.iced",
     "test-debug": "node --inspect-brk node_modules/.bin/iced test/all.iced"
   },

@@ -3,7 +3,6 @@
 dbg = require './debug'
 E = require './errors'
 pako = require('pako')
-toBuffer = require('typedarray-to-buffer')
 
 iced = require('./iced').runtime
 
@@ -21,8 +20,7 @@ compress = (ctype, data) ->
       # set windowBits to 31 = 15 (the default) + 16 (for gzip header)
       # https://zlib.net/manual.html#Advanced
       data = pako.deflate data, {windowBits: 31}
-      return toBuffer data 
-      #return data
+      return data
     else
       throw new Error "Compress: unknown compression type #{ctype}"
 
