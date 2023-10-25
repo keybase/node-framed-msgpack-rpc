@@ -45,7 +45,7 @@ exports.Ring = class Ring
 
     # now make a buffer that's potentially bigger than what we wanted
     #NOJIMAret = Buffer.alloc n_grabbed
-    ret = new Uint8Array n_grabbed
+    ret = new Uint8Array n_wanted
     n = 0
 
     # now copy all of those num_bufs into ret

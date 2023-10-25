@@ -97,7 +97,8 @@ exports.Packetizer = class Packetizer
     # header. If we can't get that much, we'll just have to wait!
     return @WAIT unless (f_full = @_ring.grab frame_len)?
 
-    [w,r] = unpack f_full.slice 0, frame_len
+    #NOJIMA[w,r] = unpack f_full.slice 0, frame_len
+    [w,r] = unpack f_full.subarray 0, frame_len
     @_packetize_warning w if w?
 
     res = switch (typ = typeof r)
