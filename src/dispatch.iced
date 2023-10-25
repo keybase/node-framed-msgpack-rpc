@@ -34,7 +34,6 @@ uncompress = (ctype, data) ->
       return data
     when COMPRESSION_TYPE_GZIP
       data = pako.inflate data
-      #NOJIMA [err, data] = unpack toBuffer data
       [err, data] = unpack data
       unless err?
         return data

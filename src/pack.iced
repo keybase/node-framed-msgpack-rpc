@@ -49,8 +49,6 @@ exports.pack = (b) ->
     when "msgpack"
       return mp.pack b
     when "@msgpack/msgpack"
-      #NOJIMAencoded = mpmp.encode(b) 
-      #NOJIMAreturn Buffer.from encoded.buffer, encoded.byteOffset, encoded.byteLength
       return mpmp.encode(b)
 
 exports.unpack = (b) ->

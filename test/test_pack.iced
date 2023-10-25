@@ -2,7 +2,7 @@
 
 
 exports.test_encode_lib = (T, cb) ->
-  T.equal 'purepack', pack.get_encode_lib()
+  T.equal '@msgpack/msgpack', pack.get_encode_lib()
   pack.set_opt 'encode_lib', '@msgpack/msgpack'
   T.equal '@msgpack/msgpack', pack.get_encode_lib()
   pack.set_opt 'encode_lib', 'protobuf'

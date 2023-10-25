@@ -68,11 +68,10 @@ exports.Packetizer = class Packetizer
     rc = 0
     enc = 'binary'
     for b in bufs
-      #NOJIMA@_raw_write b.toString(enc), enc
       s = ''
       for i in [0...b.length]
         s += String.fromCharCode(b[i])
-      @_raw_write s
+      @_raw_write s, enc
     return true
 
   ##-----------------------------------------
@@ -97,7 +96,6 @@ exports.Packetizer = class Packetizer
     # header. If we can't get that much, we'll just have to wait!
     return @WAIT unless (f_full = @_ring.grab frame_len)?
 
-    #NOJIMA[w,r] = unpack f_full.slice 0, frame_len
     [w,r] = unpack f_full.subarray 0, frame_len
     @_packetize_warning w if w?
 

@@ -22,7 +22,6 @@ default_level = L.INFO
 
 stringify = (o) ->
   if not o? then ""
-  #NOJIMA else if Buffer.isBuffer(o) then o.toString('utf8') 
   else if o instanceof Uint8Array then new TextDecoder().decode(o)
   else if util.isError(o) then o.toString()
   else ("" + o)

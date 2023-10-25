@@ -44,15 +44,13 @@ exports.Ring = class Ring
         break
 
     # now make a buffer that's potentially bigger than what we wanted
-    #NOJIMAret = Buffer.alloc n_grabbed
-    ret = new Uint8Array n_wanted
+    ret = new Uint8Array n_grabbed
     n = 0
 
     # now copy all of those num_bufs into ret
     for b in @_bufs[0...num_bufs]
-      #NOJIMAb.copy ret, n, 0, b.length
-      sub = ret subarray n, b.length  
-      sub set b
+      sub = ret.subarray n, n + b.length  
+      sub.set b
       n += b.length
 
     # this first buffer that we'll be keeping (the returned buffer)
@@ -70,6 +68,5 @@ exports.Ring = class Ring
     if b.length == n
       @_bufs = @_bufs[1...]
     else
-      #NOJIMA@_bufs[0] = b[n...]
       @_bufs[0] = b.subarray(n)
     @_len -= n

@@ -238,7 +238,6 @@ exports.Transport = class Transport extends Dispatch
     #
     x.on 'error', (err) => @_handle_error err, w
     x.on 'close', ()    => @_handle_close w
-    #NOJIMAx.on 'data',  (msg) => @packetize_data msg 
     x.on 'data',  (msg) =>  @packetize_data new Uint8Array msg.buffer, msg.byteOffset, msg.byteLength
 
   ##-----------------------------------------
