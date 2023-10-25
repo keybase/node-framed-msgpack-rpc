@@ -68,7 +68,11 @@ exports.Packetizer = class Packetizer
     rc = 0
     enc = 'binary'
     for b in bufs
-      @_raw_write b.toString(enc), enc
+      #NOJIMA@_raw_write b.toString(enc), enc
+      s = ''
+      for i in [0...b.length]
+        s += String.fromCharCode(b[i])
+      @_raw_write s
     return true
 
   ##-----------------------------------------
@@ -122,7 +126,7 @@ exports.Packetizer = class Packetizer
 
     ret = if l > @_ring.len() or not (b = @_ring.grab l)?
       @WAIT
-    else if not ([pw,msg] = unpack b.slice 0, l)? or not msg?
+    else if not ([pw,msg] = unpack b.subarray 0, l)? or not msg?
       @_packetize_error "bad encoding found in data/payload; len=#{l}"
       @ERR
     else if not is_array msg
