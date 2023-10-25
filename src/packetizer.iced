@@ -60,18 +60,18 @@ exports.Packetizer = class Packetizer
     @_next_msg_len = 0
 
   ##-----------------------------------------
+  _buf_write : (b) ->
+      s = ''
+      for i in [0...b.length]
+        s += String.fromCharCode(b[i])
+      @_raw_write s, 'binary'
+    
 
   send : (msg) ->
     b2 = pack msg
     b1 = pack b2.length
-    bufs = [ b1, b2 ]
-    rc = 0
-    enc = 'binary'
-    for b in bufs
-      s = ''
-      for i in [0...b.length]
-        s += String.fromCharCode(b[i])
-      @_raw_write s, enc
+    @_buf_write b1
+    @_buf_write b2
     return true
 
   ##-----------------------------------------
