@@ -84,7 +84,7 @@ exports.Dispatch = class Dispatch extends Packetizer
   _dispatch : (msg) ->
 
     # We can escape from this, but it's not great...
-    if not msg instanceof Array or msg.length < 2
+    if not (msg instanceof Array) or msg.length < 2
       @_warn "Bad input packet in dispatch"
     else
       switch (type = msg.shift())
