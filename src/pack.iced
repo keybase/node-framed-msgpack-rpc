@@ -20,7 +20,7 @@ _opts = {}
 exports.set_opt = set_opt = (k,v) -> _opts[k] = v
 exports.set_opts = set_opts = (o) -> _opts = o
 exports.get_encode_lib = get_encode_lib = () ->
-  encode_lib = _opts.encode_lib or "purepack"
+  encode_lib = _opts.encode_lib or "@msgpack/msgpack"
   switch encode_lib
     when "purepack", "msgpack", "@msgpack/msgpack"
       return encode_lib
@@ -49,8 +49,7 @@ exports.pack = (b) ->
     when "msgpack"
       return mp.pack b
     when "@msgpack/msgpack"
-      encoded = mpmp.encode(b)
-      return Buffer.from encoded.buffer, encoded.byteOffset, encoded.byteLength
+      return mpmp.encode(b)
 
 exports.unpack = (b) ->
   err = dat = null

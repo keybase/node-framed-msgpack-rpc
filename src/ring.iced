@@ -1,6 +1,3 @@
-
-{Buffer} = require 'buffer'
-
 ##=======================================================================
 
 exports.Ring = class Ring
@@ -45,18 +42,19 @@ exports.Ring = class Ring
         break
 
     # now make a buffer that's potentially bigger than what we wanted
-    ret = Buffer.alloc n_grabbed
+    ret = new Uint8Array n_grabbed
     n = 0
 
     # now copy all of those num_bufs into ret
     for b in @_bufs[0...num_bufs]
-      b.copy ret, n, 0, b.length
+      sub = ret.subarray n, n + b.length  
+      sub.set b
       n += b.length
 
     # this first buffer that we'll be keeping (the returned buffer)
     first_pos = num_bufs - 1
     @_bufs[first_pos] = ret
-    @_bufs = @_bufs[first_pos...]
+    @_bufs.splice 0, first_pos
 
     return ret
 
@@ -66,7 +64,7 @@ exports.Ring = class Ring
     if @_bufs.length is 0 or (b = @_bufs[0]).length < n
       throw new Error "Ring underflow; can't remove #{n} bytes"
     if b.length == n
-      @_bufs = @_bufs[1...]
+      @_bufs.splice 0, 1
     else
-      @_bufs[0] = b[n...]
+      @_bufs[0] = b.subarray(n)
     @_len -= n

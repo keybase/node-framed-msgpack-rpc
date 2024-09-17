@@ -3,7 +3,6 @@
 dbg = require './debug'
 E = require './errors'
 pako = require('pako')
-toBuffer = require('typedarray-to-buffer')
 
 iced = require('./iced').runtime
 
@@ -21,7 +20,7 @@ compress = (ctype, data) ->
       # set windowBits to 31 = 15 (the default) + 16 (for gzip header)
       # https://zlib.net/manual.html#Advanced
       data = pako.deflate data, {windowBits: 31}
-      return toBuffer data
+      return data
     else
       throw new Error "Compress: unknown compression type #{ctype}"
 
@@ -33,7 +32,7 @@ uncompress = (ctype, data) ->
       return data
     when COMPRESSION_TYPE_GZIP
       data = pako.inflate data
-      [err, data] = unpack toBuffer data
+      [err, data] = unpack data
       unless err?
         return data
       throw err
@@ -85,7 +84,7 @@ exports.Dispatch = class Dispatch extends Packetizer
   _dispatch : (msg) ->
 
     # We can escape from this, but it's not great...
-    if not msg instanceof Array or msg.length < 2
+    if not (msg instanceof Array) or msg.length < 2
       @_warn "Bad input packet in dispatch"
     else
       switch (type = msg.shift())

@@ -29,3 +29,6 @@ emailAddress           = certs@example.com
 
 [ req_attributes ]
 challengePassword      = test
+
+[system_default_sect]
+security_level = 0
