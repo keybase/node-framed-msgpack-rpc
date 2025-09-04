@@ -20,6 +20,15 @@ challengePassword      = password
 
 [ v3_ca ]
 authorityInfoAccess = @issuer_info
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = localhost
+IP.1 = 127.0.0.1
+IP.2 = ::1
 
 [ issuer_info ]
 OCSP;URI.0 = http://ocsp.example.com/

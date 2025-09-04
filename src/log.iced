@@ -1,11 +1,29 @@
 
-util = require 'util'
-
 #
 # The standard logger for saying that things went wrong, or state changed,
 # inside the RPC system.  You can of course change this to be whatever you'd
 # like via the @log_obj member of the Transport class.
 #
+
+util = require 'util'
+
+##=======================================================================
+
+isError = (o) ->
+  # Check using multiple methods for maximum compatibility
+  # Error.isError() is strict and may not recognize IcedCoffeeScript Error subclasses
+  # util.isError() is more liberal but doesn't exist in newer Node.js
+  # instanceof Error is the most basic check
+  if typeof Error.isError is 'function' and Error.isError(o)
+    true
+  else if typeof util.isError is 'function' and util.isError(o)
+    true
+  else
+    o instanceof Error
+
+exports.isError = isError
+
+##=======================================================================
 
 exports.levels = L =
   NONE : 0
@@ -23,7 +41,7 @@ default_level = L.INFO
 stringify = (o) ->
   if not o? then ""
   else if Buffer.isBuffer(o) then o.toString('utf8')
-  else if util.isError(o) then o.toString()
+  else if isError(o) then o.toString()
   else ("" + o)
 
 ##=======================================================================

@@ -35,7 +35,7 @@ exports.reconnect = (T, cb) ->
         await T.test_rpc c, "foo", { i : 4 } , { y : 6 }, defer()
       else
         await T.test_rpc_compressed c, "foo", COMPRESSION_TYPE_GZIP, { i : 4 } , { y : 6 }, defer()
-      await setTimeout defer(), 10
+      await setTimeout defer(), 20
 
     x.close()
 
