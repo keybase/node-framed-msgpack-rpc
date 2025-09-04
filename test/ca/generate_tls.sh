@@ -16,12 +16,12 @@ cd "$(dirname "$BASH_SOURCE")"
 # failure case we'll have the test client look for the bad one.
 for virtuousness in good bad ; do
   mkdir -p "./$virtuousness"
-  openssl req -new -x509 -days 9999 -config ca.cnf \
+  openssl req -new -x509 -days 9999 -config "ca.cnf" -sha256 \
     -keyout "$virtuousness/ca-key.pem" -out "$virtuousness/ca-crt.pem"
   openssl genrsa -out "$virtuousness/server-key.pem" 4096
   openssl req -new -config server.cnf -key "$virtuousness/server-key.pem" \
     -out "$virtuousness/server-csr.pem"
-  openssl x509 -req -extfile server.cnf -days 999 -passin "pass:password" \
+  openssl x509 -req -extfile server.cnf -extensions v3_ca -days 999 -passin "pass:password" -sha256 \
     -in "$virtuousness/server-csr.pem" -CA "$virtuousness/ca-crt.pem" \
     -CAkey "$virtuousness/ca-key.pem" -CAcreateserial \
     -out "$virtuousness/server-crt.pem"

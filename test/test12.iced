@@ -55,6 +55,6 @@ exports.test_bad_hardcoded_CA_cert = (T, cb) ->
   await x.connect defer err
   T.assert(err?, "connect should return an error")
   if err?
-    T.assert(err.code == 'CERT_SIGNATURE_FAILURE', "error should be because of the bad cert, found: " + err)
+    T.assert(err.code == 'SELF_SIGNED_CERT_IN_CHAIN', "error should be because of the bad cert, found: " + err)
   x.close()
   cb()

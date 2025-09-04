@@ -8,7 +8,7 @@ database = ca-database.txt
 name_opt = CA_default
 cert_opt = CA_default
 default_crl_days = 9999
-default_md = md5
+default_md = sha256
 
 [ req ]
 default_bits           = 4096
@@ -17,6 +17,13 @@ distinguished_name     = req_distinguished_name
 attributes             = req_attributes
 prompt                 = no
 output_password        = password
+x509_extensions        = v3_ca
+
+[ v3_ca ]
+basicConstraints       = critical,CA:TRUE
+keyUsage               = critical,keyCertSign,cRLSign
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always,issuer:always
 
 [ req_distinguished_name ]
 C                      = US
