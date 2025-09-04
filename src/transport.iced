@@ -342,10 +342,10 @@ exports.RobustTransport = class RobustTransport extends Transport
   #    queue_max -- the limit to how many calls we'll queue while we're
   #       waiting on a reconnect.
   #
-  #    warn_threshhold -- if a call takes more than this number of seconds,
+  #    warn_threshold -- if a call takes more than this number of seconds,
   #       a warning will be fired when the RPC completes.
   #
-  #    error_threshhold -- if a call *is taking* more than this number of
+  #    error_threshold -- if a call *is taking* more than this number of
   #       seconds, we will make an error output while the RPC is outstanding,
   #       and then make an error after we know how long it took.
   #
@@ -353,7 +353,7 @@ exports.RobustTransport = class RobustTransport extends Transport
   constructor : (sd, d = {}) ->
     super sd
 
-    { @queue_max, @warn_threshhold, @error_threshhold } = d
+    { @queue_max, @warn_threshold, @error_threshold } = d
 
     # in seconds, provide a default of 1s for a reconnect delay
     # if none was given.  Also, 0 is not a valid value.
@@ -364,7 +364,7 @@ exports.RobustTransport = class RobustTransport extends Transport
     # supply here as 1000.
     @queue_max = 1000 unless @queue_max?
 
-    @_time_rpcs = @warn_threshhold? or @error_threshhold?
+    @_time_rpcs = @warn_threshold? or @error_threshold?
 
     @_waiters = []
 
@@ -433,8 +433,8 @@ exports.RobustTransport = class RobustTransport extends Transport
     rv = new iced.Rendezvous
     meth = @make_method arg.program, arg.method
 
-    et = if @error_threshhold then @error_threshhold*1000 else 0
-    wt = if @warn_threshhold then @warn_threshhold*1000 else 0
+    et = if @error_threshold then @error_threshold*1000 else 0
+    wt = if @warn_threshold then @warn_threshold*1000 else 0
 
     # Keep a handle to this timeout so we can clear it later on success
     to = setTimeout rv.id(TIMEOUT).defer(), et if et
@@ -489,4 +489,3 @@ exports.createTransport = (opts) ->
   else                new Transport opts
 
 ##=======================================================================
-

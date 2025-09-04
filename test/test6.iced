@@ -36,8 +36,8 @@ exports.init = (cb) ->
 exports.slow_warnings = (T, cb) ->
 
   rtops =
-    warn_threshhold : SLOW / 4000
-    error_threshhold : SLOW / 2000
+    warn_threshold : SLOW / 4000
+    error_threshold : SLOW / 2000
 
   await T.connect PORT, "P.1", defer(x, c), rtops
 
