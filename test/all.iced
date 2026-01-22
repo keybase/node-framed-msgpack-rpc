@@ -6,7 +6,7 @@ colors = require 'colors'
 deep_equal = require 'deep-equal'
 {debug,log,Logger,RobustTransport,Transport,Client} = require '../src/main'
 iced = require('../src/iced').runtime
-util = require 'util'
+util = require 'util/'
 
 ##-----------------------------------------------------------------------
 
