@@ -1,5 +1,5 @@
 
-util = require 'util'
+util = require 'util/'
 
 #
 # The standard logger for saying that things went wrong, or state changed,
