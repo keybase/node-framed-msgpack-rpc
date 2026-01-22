@@ -1,6 +1,3 @@
-
-util = require 'util'
-
 #
 # The standard logger for saying that things went wrong, or state changed,
 # inside the RPC system.  You can of course change this to be whatever you'd
@@ -23,7 +20,7 @@ default_level = L.INFO
 stringify = (o) ->
   if not o? then ""
   else if o instanceof Uint8Array then new TextDecoder().decode(o)
-  else if util.isError(o) then o.toString()
+  else if Error.isError(o) then o.toString()
   else ("" + o)
 
 ##=======================================================================

@@ -6,7 +6,6 @@ colors = require 'colors'
 deep_equal = require 'deep-equal'
 {debug,log,Logger,RobustTransport,Transport,Client} = require '../src/main'
 iced = require('../src/iced').runtime
-util = require 'util'
 
 ##-----------------------------------------------------------------------
 
@@ -71,7 +70,7 @@ class TestCase
   logger : () -> @_global.logger()
 
   search : (s, re, msg) ->
-    if util.isError(s)
+    if Error.isError(s)
       s = s.toString()
     @assert (s? and s.search(re) >= 0), msg
 
