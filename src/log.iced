@@ -20,7 +20,7 @@ default_level = L.INFO
 stringify = (o) ->
   if not o? then ""
   else if o instanceof Uint8Array then new TextDecoder().decode(o)
-  else if Error.isError(o) then o.toString()
+  else if o instanceof Error then o.toString()
   else ("" + o)
 
 ##=======================================================================
