@@ -70,7 +70,7 @@ class TestCase
   logger : () -> @_global.logger()
 
   search : (s, re, msg) ->
-    if Error.isError(s)
+    if s instanceof Error
       s = s.toString()
     @assert (s? and s.search(re) >= 0), msg
 
