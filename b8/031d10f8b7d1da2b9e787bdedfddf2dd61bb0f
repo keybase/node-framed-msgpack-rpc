@@ -1,0 +1,19 @@
+.github/workflows/ci.yml
+  s_aa5392090d26d8::t_718ef335d7e4d3 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "b8031d10f8b7d1da2b9e787bdedfddf2dd61bb0f",
+  "prompts": {},
+  "sessions": {
+    "s_aa5392090d26d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a70db1ce-b35b-458d-95e7-54d5a6bcf359",
+        "model": "grok-4.6"
+      },
+      "human_author": null
+    }
+  }
+}
