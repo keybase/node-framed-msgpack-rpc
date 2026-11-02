@@ -62,7 +62,7 @@ exports.Dispatch = class Dispatch extends Packetizer
   INVOKE : 0
   RESPONSE : 1
   NOTIFY   : 2
-  # CANCEL : 3, not implemented
+  CANCEL : 3
   INVOKE_COMPRESSED : 4
 
   ##-----------------------------------------
@@ -104,6 +104,10 @@ exports.Dispatch = class Dispatch extends Packetizer
           param = uncompress ctype, param
           response = new Response @, seqid, ctype
           @_serve { method, param, response }
+        when @CANCEL
+          # Server-side cancellation is not implemented; parse and drop the message.
+          [seqid,method] = msg
+          return
         else
           @_warn "Unknown message type: #{type}"
 
