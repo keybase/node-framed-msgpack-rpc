@@ -1,0 +1,23 @@
+src/dispatch.iced
+  s_53fa60dcb2559d::t_0e9c6ce8097622 110
+  s_53fa60dcb2559d::t_7de7330c63f579 107-109
+  s_53fa60dcb2559d::t_bceb0b5b5d62bd 65
+lib/dispatch.js
+  s_53fa60dcb2559d::t_84996f2b85ab93 103-104,160-162,277
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "63be4ecb791ef36baa4656f6c88b125b2b8d9024",
+  "prompts": {},
+  "sessions": {
+    "s_53fa60dcb2559d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "294e09f8-b71f-48bb-8f34-e17db7fadbe7",
+        "model": "claude-haiku-5-5"
+      },
+      "human_author": "Joshua Blum <joshua.blum@zoom.us>"
+    }
+  }
+}
